@@ -1,0 +1,20 @@
+version: '3'
+
+services:
+  traefik:
+    image: traefik
+    entrypoint: sh -c "sed 's/$$TRAEFIK_PILOT_TOKEN/$TRAEFIK_PILOT_TOKEN/' /etc/traefik/traefik-template.yml > /etc/traefik/traefik.yml && traefik"
+    ports:
+      - "80:80"
+      - "8080:8080"
+    volumes:
+      - './traefik.yml:/etc/traefik/traefik-template.yml'
+      - '/var/run/docker.sock:/var/run/docker.sock'
+      - '.:/plugins/go/src/github.com/rsteube/traefik-plugin-brotli'
+    environment:
+      TRAEFIK_PILOT_TOKEN: "$TRAEFIK_PILOT_TOKEN"
+  whoami:
+    image: containous/whoami
+    labels:
+      - "traefik.http.middlewares.brotli.plugin.dev.test=bar"
+      - "traefik.http.routers.whoami-traefik-plugin-brotli.middlewares=brotli@docker"

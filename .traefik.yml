@@ -1,0 +1,11 @@
+displayName: brotli compression
+type: middleware
+
+import: github.com/rsteube/traefik-plugin-brotli
+
+summary: 'Add brotli compression'
+
+testData:
+  Headers:
+    X-Demo: test
+    X-URL: '{{URL}}'

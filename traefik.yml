@@ -1,0 +1,14 @@
+providers:
+  docker:
+    defaultRule: "Host(`{{ trimPrefix `/` .Name }}.docker.localhost`)"
+
+api:
+  insecure: true
+
+pilot:
+  token: "$TRAEFIK_PILOT_TOKEN"
+
+experimental:
+  devPlugin:
+    goPath: /plugins/go
+    moduleName: github.com/rsteube/traefik-plugin-brotli
