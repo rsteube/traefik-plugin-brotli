@@ -11,7 +11,7 @@ services:
       - './traefik.yml:/etc/traefik/traefik-template.yml'
       - '/var/run/docker.sock:/var/run/docker.sock'
       - '.:/plugins/go/src/github.com/rsteube/traefik-plugin-brotli'
-      - './traefik:/usr/local/bin/traefik'
+        #      - './traefik:/usr/local/bin/traefik'
     environment:
       TRAEFIK_PILOT_TOKEN: "$TRAEFIK_PILOT_TOKEN"
   whoami:
