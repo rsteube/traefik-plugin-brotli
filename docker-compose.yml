@@ -2,7 +2,7 @@ version: '3'
 
 services:
   traefik:
-    image: traefik
+    build: .
     entrypoint: sh -c "sed 's/$$TRAEFIK_PILOT_TOKEN/$TRAEFIK_PILOT_TOKEN/' /etc/traefik/traefik-template.yml > /etc/traefik/traefik.yml && traefik"
     ports:
       - "80:80"
@@ -11,6 +11,7 @@ services:
       - './traefik.yml:/etc/traefik/traefik-template.yml'
       - '/var/run/docker.sock:/var/run/docker.sock'
       - '.:/plugins/go/src/github.com/rsteube/traefik-plugin-brotli'
+      - './traefik:/usr/local/bin/traefik'
     environment:
       TRAEFIK_PILOT_TOKEN: "$TRAEFIK_PILOT_TOKEN"
   whoami:
@@ -18,3 +19,15 @@ services:
     labels:
       - "traefik.http.middlewares.brotli.plugin.dev.test=bar"
       - "traefik.http.routers.whoami-traefik-plugin-brotli.middlewares=brotli@docker"
+  file:
+    image: python:alpine
+    command: sh -c "cd /web && python -m http.server 80"
+    volumes:
+      - '.:/web'
+    environment:
+      PORT: 80
+    ports:
+      - '8888:80'
+    labels:
+      - "traefik.http.middlewares.brotli.plugin.dev.test=bar"
+      - "traefik.http.routers.file-traefik-plugin-brotli.middlewares=brotli@docker"
